@@ -1,0 +1,151 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Tone.TrackModeller.Design">
+
+    <ControlTemplate x:Key="MenuButtonModel" TargetType="Button">
+        <StackPanel Name="ButtonSp" Cursor="Hand" Background="Transparent" >
+            <ContentPresenter Name="ContentBlock" TextBlock.FontSize="12" TextBlock.Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ButtonSp" Property="Background" Value="#0088CE"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <ControlTemplate x:Key="MenuButtonModelSelected" TargetType="Button">
+        <StackPanel Name="ButtonSp" Background="#0088CE">
+            <ContentPresenter Name="ContentBlock" TextBlock.FontSize="12" TextBlock.Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <Path Margin="0 -10 0 0" Width="25" Height="10" Data="F1 M 0,2 6,0 12,2 Z" Stretch="Fill" Fill="#D9DCE3" />
+        </StackPanel>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SpaceTabItem" TargetType="TabItem">
+        <Grid Height="120"></Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="Transparent"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CustomTab" TargetType="{x:Type TabItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid Margin="-4 0 0 0" Name="ItemGrid" Background="Transparent">
+                        <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="12,2,12,2"
+                                    RecognizesAccessKey="True" Width="120" Height="80"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemGrid" Property="Background" Value="#0088CE" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#888" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CustomSemiTab" TargetType="{x:Type TabItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid Margin="-4 0 0 0" Name="ItemGrid" Background="#D6D9E0">
+                        <!--<TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="12" Text="{Binding Header}" />-->
+                        <ContentPresenter x:Name="ContentSite"
+                                    TextBlock.Foreground="#292C35"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="12,2,12,2"
+                                    RecognizesAccessKey="True" Height="20"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemGrid" Property="Background" Value="#292C35" />
+                            <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#888" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="TransparentButton" TargetType="{x:Type Button}">
+        <Grid>
+            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="DataHeader" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="#B7BDCD" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="22" />
+    </Style>
+
+    <Style x:Key="ListViewHeader" TargetType="TextBlock">
+        <Setter Property="Padding" Value="0 3 0 0" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="22" />
+    </Style>
+
+    <ControlTemplate x:Key="BlackButton" TargetType="{x:Type Button}">
+        <Grid Name="ButtonGrid" Background="#292C35" Cursor="Hand">
+            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" TextBlock.Foreground="White" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ButtonGrid" Property="Background" Value="#D1D5E1" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ButtonGrid" Property="Background" Value="#0088CE" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="BorderWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="ResizeMode" Value="NoResize" />
+    </Style>
+
+    <ControlTemplate x:Key="CloseButton" TargetType="Button">
+        <Border BorderThickness="0 0 1 0" BorderBrush="#292C35">
+            <StackPanel Name="sp" Height="20" Width="40" Background="#0088CE" Cursor="Hand">
+                <ContentPresenter Name="ContentBlock" TextBlock.FontSize="14" TextBlock.Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"></ContentPresenter>
+            </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <!--<Setter TargetName="block" Property="Fill" Value="Red" />-->
+                <Setter TargetName="sp" Property="Background" Value="#292C35" />
+
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    
+</ResourceDictionary>
+    
+    

@@ -1,0 +1,342 @@
+﻿<Page x:Class="OsrmRoutesEditor.MainWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:wpf="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+      xmlns:controls="clr-namespace:OsrmRoutesEditor.Controls"
+      xmlns:trackPlayer="clr-namespace:OsrmRoutesEditor.Controls.TrackPlayer"
+      xmlns:helpers="clr-namespace:OsrmRoutesEditor.Helpers"
+      xmlns:trackPlayer1="clr-namespace:OsrmRoutesEditor.Controls.TrackPlayer"
+      xmlns:controls1="clr-namespace:OsrmRoutesEditor.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="ModelingPage"
+      KeepAlive="True" 
+      ShowsNavigationUI="False"
+      Loaded="ModelingPage_OnLoaded">
+    <Page.Resources>
+        <helpers:CheckingToImageConverter x:Key="CheckingToImageConverter"/>
+        <SolidColorBrush x:Key="SolidBorderBrush" Color="Transparent" />
+        <SolidColorBrush x:Key="GreenBrush" Color='#99BCFA' />
+        <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE" />
+        <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
+        <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border 
+                                Name="Border"
+                                BorderBrush="{StaticResource  SolidBorderBrush}">
+                                <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Margin="12,2,12,2"
+                                    RecognizesAccessKey="True"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="100" />
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource GreenBrush}" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource DisabledBackgroundBrush}" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource DisabledBorderBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Height="30" Width="30" ToolTip="New track" x:Name="NewImitationTrackPageButton" Click="NewTrackPageButton_OnClick">
+                            <Image Source="Images/page-blank.png"/>
+                        </Button>
+                        <Button Height="30" Width="30" ToolTip="Clone track" x:Name="CloneImitationTrackButton" Click="CloneTrackButton_OnClick">
+                            <Image Source="Images/add-documents.png"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <TabControl Width="500" TabStripPlacement="Left" Grid.Row="1" x:Name="TabControlItems" MouseEnter="TabControlItems_MouseEnter">
+                    <TabItem Width="150" Height="70">
+                        <TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Center">
+                                    <Image Height="20" Source="{Binding [0], Converter={StaticResource CheckingToImageConverter}}"/>
+                                    <Image Height="40" Width="40" Source="Images/TopMenu/laptop.png"/>
+                                </StackPanel>
+                                <Label Grid.Row="1">Track description</Label>
+                            </Grid>
+                        </TabItem.Header>
+                        <GroupBox Header="Track description" DataContext="{Binding}" x:Name="CommonData">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="5">
+                                    <Label Content="Track name"></Label>
+                                    <TextBox x:Name="TrackNameTextBox"/>
+                                    <Label Content="Author"></Label>
+                                    <TextBox x:Name="AuthorTextBox" Text="{Binding Author, Mode=TwoWay}"/>
+                                    <Label Content="Description"></Label>
+                                    <TextBox x:Name="TrackDescriptionTextBox" Height="150" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Description, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Width="150" Height="70">
+                        <TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Center">
+                                    <Image Height="20" Source="{Binding [1], Converter={StaticResource CheckingToImageConverter}}"/>
+                                    <Image Height="40" Width="40" Source="Images\TopMenu\transfer.png"/>
+                                </StackPanel>
+                                <Label Grid.Row="1">Track points</Label>
+                            </Grid>
+                        </TabItem.Header>
+                        <GroupBox Header="Track points">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <DataGrid   Grid.Column="0"
+                                            AutoGenerateColumns="False" 
+                                            CanUserAddRows="False"
+                                            CanUserDeleteRows="True"
+                                            IsReadOnly="True"
+                                            x:Name="WayPointsForOsrmDataGrid"
+                                            VerticalScrollBarVisibility="Visible"
+                                            MouseDoubleClick="WayPointsForOsrmDataGrid_MouseDoubleClick" PreviewKeyDown="WayPointsForOsrmDataGrid_PreviewKeyDown">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn x:Name="Content1" Binding="{Binding 'Content'}" Header="№" />
+                                            <DataGridTextColumn x:Name="Latitude1" Binding="{Binding 'Location.Latitude'}" Header="latitude" />
+                                            <DataGridTextColumn x:Name="Longitude1" Binding="{Binding 'Location.Longitude'}" Header="longitude" />
+                                        </DataGrid.Columns>
+                                        <DataGrid.Resources>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="#2FD52F" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.Resources>
+                                    </DataGrid>
+                                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                                        <Button Width="66" Height="30" Content="Del" x:Name="DeleteWayPointButton" Click="DeleteWayPointButton_OnClick"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="Create track" x:Name="LoadOsrmTrack" Click="LoadOsrmTrack_OnClick"/>
+                                    <Button Grid.Column="1" Content="Insert mode" x:Name="WayPointsEditModeButton" Background="#008B8989" Click="WayPointsEditModeButton_OnClick"/>
+                                    <CheckBox Grid.Column="2" Content="Auto" x:Name="AutoRouteDrowCheckBox" VerticalAlignment="Center"></CheckBox>
+                                </Grid>
+                                <Button Grid.Row="2" x:Name="ClearAllButton" Content="Clear" Click="ClearAllButton_OnClick"></Button>
+                            </Grid>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Width="150" Height="70">
+                        <TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Image Height="20" Source="{Binding [2], Converter={StaticResource CheckingToImageConverter}}"/>
+                                    <Image Height="40" Width="40" Source="Images/TopMenu/location.png"/>
+                                </StackPanel>
+                                <Label Grid.Row="1">Track geometry</Label>
+                            </Grid>
+                        </TabItem.Header>
+                        <GroupBox Header="Track geometry, Utc time">
+                            <DataGrid
+                                          Grid.Row="1"
+                                          AutoGenerateColumns="False" 
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          IsReadOnly="True"
+                                          x:Name="TrackPositionsDataGrid"
+                                          VerticalScrollBarVisibility="Visible" SelectionChanged="PositionsDataGrid_SelectionChanged">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn x:Name="SentOn" Binding="{Binding SentOn, StringFormat=' \{0:HH:mm:ss dd.MM.yy\}'}" Header="sentOn" />
+                                    <DataGridTextColumn x:Name="Latitude" Binding="{Binding Latitude}" Header="latitude" />
+                                    <DataGridTextColumn x:Name="Longitude" Binding="{Binding Longitude}" Header="longitude" />
+                                    <DataGridTextColumn x:Name="Speed" Binding="{Binding Speed}" Header="speed, km/h" />
+                                </DataGrid.Columns>
+                                <DataGrid.Resources>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Style.Triggers>
+                                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                <Setter Property="Background" Value="#2FD52F" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Resources>
+                            </DataGrid>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Width="150" Height="70">
+                        <TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Image Height="20" Source="{Binding [3], Converter={StaticResource CheckingToImageConverter}}"/>
+                                    <Image Height="40" Width="40" Source="Images/TopMenu/settings.png"/>
+                                </StackPanel>
+                                <Label Grid.Row="1">Setup imei</Label>
+                            </Grid>
+                        </TabItem.Header>
+                        <GroupBox Header="Setup imei for points">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                    <TextBox x:Name="NewGpsDeviceTextBox" Width="165"/>
+                                    <Button Content="+" Width="25" x:Name="AddNewGpsDevice" Click="AddNewGpsDevice_OnClick"/>
+                                    <Button Content="-" Width="25" x:Name="RemoveNewGpsDevice" Click="RemoveNewGpsDevice_OnClick"/>
+                                </StackPanel>
+                                <DataGrid Grid.Row="1"
+                                      AutoGenerateColumns="False" 
+                                      CanUserAddRows="False"
+                                      CanUserDeleteRows="False"
+                                      IsReadOnly="True"
+                                      x:Name="NewImitationTrackGpsDevicesDataGrid"
+                                      VerticalScrollBarVisibility="Visible"
+                                      SelectionChanged="NewImitationTrackGpsDevicesDataGrid_OnSelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn x:Name="Imei1" Binding="{Binding Imei}" Header="Imei" Width="*"/>
+                                    </DataGrid.Columns>
+                                    <DataGrid.Resources>
+                                        <Style TargetType="{x:Type DataGridCell}">
+                                            <Style.Triggers>
+                                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="#2FD52F" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.Resources>
+                                </DataGrid>
+                            </Grid>
+                        </GroupBox>
+                    </TabItem>
+                    <TabItem Width="150" Height="70">
+                        <TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Image Height="20" Source="{Binding [4], Converter={StaticResource CheckingToImageConverter}}"/>
+                                    <Image Height="40" Width="40" Source="Images/TopMenu/worldwide.png"/>
+                                </StackPanel>
+                                <Label Grid.Row="1">Result track</Label>
+                            </Grid>
+                        </TabItem.Header>
+                        <GroupBox Header="Result track">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" DataContext="{Binding}" x:Name="TotalView">
+                                    <Label Content="Track name:"/>
+                                    <Label x:Name="TrackNameLabel" Content="{Binding ElementName=TrackNameTextBox, Path=Text, Mode=OneWay}"/>
+                                    <Label Content="Author:"/>
+                                    <Label x:Name="TrackAuthorLabel" Content="{Binding Author, Mode=OneWay}"/>
+                                    <Label Content="Description:"/>
+                                    <Label x:Name="TrackDescriptionLabel" Height="120" Content="{Binding Description, Mode=OneWay}"/>
+                                    <Label Content="Points count:"></Label>
+                                    <Label x:Name="TrackPositionCount" Content="{Binding ImitationTrackPositionsCount, Mode=OneWay}"></Label>
+                                </StackPanel>
+                                <Button Grid.Row="1" Height="20" Content="Save/Export" x:Name="SaveTrack" Click="SaveTrackButton_OnClick"/>
+                            </Grid>
+                        </GroupBox>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+            <Grid Grid.Column="1" x:Name="MapGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
+                <wpf:Map x:Name="MainMap" 
+                         CredentialsProvider="Al_SRCFjgvcFUweLW_D47dCyHzOgyYG1OuXHpjebnsP6vDgRnBdYbo1gz5T8-WO7" 
+                         ZoomLevel="10" Center="52.52426800,13.40629000" Culture="en-EN"     MouseDoubleClick="MainMap_OnMouseDoubleClick">
+                    <wpf:MapPolyline x:Name="MapPolyline" Stroke="Blue" StrokeThickness="5" Opacity="0.7" Grid.Row="0"/>
+                </wpf:Map>
+                <trackPlayer1:TrackPlayerControl Grid.Row="1" x:Name="Player"/>
+                <controls1:LogWindowControl x:Name="LogWindowControl" Grid.Row="2"/>
+            </Grid>
+        </Grid>
+        <Grid Row="1" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <TextBlock Padding="5">Ready</TextBlock>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Image Source="/Images/sign-check-icon.png" Height="15" Margin="5"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <ProgressBar Value="100" Margin="3"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
+
+
+

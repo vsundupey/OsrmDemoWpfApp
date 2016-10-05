@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="OsrmRoutesEditor.Controls.TrackPlayer.TrackPlayerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:OsrmRoutesEditor.Controls.TrackPlayer.Helpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="500">
+    <UserControl.Resources>
+        <helpers:PlayerStateToImageConverter x:Key="PlayerStateToImageConverter"/>
+    </UserControl.Resources>
+    <Grid x:Name="PlayerContext" DataContext="{Binding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        <Grid Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" x:Name="PlayPauseButton" Height="60" Width="60" Click="PlayPauseButton_OnClick">
+                <Image Source="{Binding CurrentPlayPauseState, Converter={StaticResource PlayerStateToImageConverter}}"></Image>
+            </Button>
+            <Button Grid.Column="1" x:Name="StopButton" Height="60" Width="60" Click="StopButton_OnClick">
+                <Image Source="Images/stop.png"/>
+            </Button>
+        </Grid>
+        <Grid Column="1" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+            </Grid.RowDefinitions>
+            <Slider x:Name="PlayerSlider" 
+                Grid.Row="0" 
+                Minimum="0" Maximum="{Binding MaxPosition}" 
+                Value="{Binding CurrentPosition, Mode=TwoWay}"
+                TickFrequency="1"
+                IsSnapToTickEnabled="True"
+                VerticalAlignment="Center" Margin="5"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Text="{Binding CurrentPosition}"/>
+                <TextBlock Text="/"/>
+                <TextBlock Text="{Binding MaxPosition}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
